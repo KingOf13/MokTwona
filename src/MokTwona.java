@@ -112,6 +112,18 @@ public class MokTwona {
                 frame.setVisible(true);
             }
         });
+        cautionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Modifier des cautions");
+                frame.setContentPane(new ModifyCaution(frame).rootPanel);
+                //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.pack();
+                //frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
     }
 
     public static void main(String[] args) {
