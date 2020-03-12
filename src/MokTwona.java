@@ -19,7 +19,7 @@ public class MokTwona {
     private JButton transactionButton;
     private JFrame frame;
 
-    private final int size = 175;
+    private final int size = 125;
 
     public MokTwona(JFrame frame) {
         this.frame = frame;
