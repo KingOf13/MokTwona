@@ -17,10 +17,13 @@
       <component id="66a2f" class="javax.swing.JTextPane" binding="cautionPanel">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="1" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
+            <preferred-size width="300" height="200"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <editable value="false"/>
+          <opaque value="false"/>
+        </properties>
       </component>
       <component id="3ce64" class="javax.swing.JComboBox" binding="selectBox">
         <constraints>

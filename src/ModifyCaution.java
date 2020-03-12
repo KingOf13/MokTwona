@@ -16,6 +16,8 @@ public class ModifyCaution {
     private int[] exCaution = {10, 5 , 0, 5};
     private int montant = 0;
     private boolean notSet = true;
+    private int idxClient = -1;
+    private int idxSelect = -1;
 
     public ModifyCaution(JFrame frame) {
         this.frame = frame;
@@ -25,56 +27,61 @@ public class ModifyCaution {
         clientBox.setModel(model2);
         selectBox.setSelectedIndex(-1);
         clientBox.setSelectedIndex(-1);
+        refreshPanel();
         clientBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int idx = clientBox.getSelectedIndex();
-                cautionPanel.setText(exName[idx] + " a une caution de " + exCaution[idx] + "€");
+                idxClient = clientBox.getSelectedIndex();
+                refreshPanel();
+            }
+        });
+        selectBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                idxSelect = selectBox.getSelectedIndex();
+                refreshPanel();
             }
         });
         fiveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 montant = 5;
-                if (clientBox.getSelectedIndex() != -1 && selectBox.getSelectedIndex() != -1) {
-                    cautionPanel.setText(addOrRemove[selectBox.getSelectedIndex()] + " " + montant + "€ à " + exName[clientBox.getSelectedIndex()] + " ?");
-                    notSet = false;
-                }
-                else {
-                    cautionPanel.setText("Choisir un client et une action PUIS le montant");
-                }
-
+                refreshPanel();
             }
         });
         tenButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 montant = 10;
-                if (clientBox.getSelectedIndex() != -1 && selectBox.getSelectedIndex() != -1) {
-                    cautionPanel.setText(addOrRemove[selectBox.getSelectedIndex()] + " " + montant + "€ à " + exName[clientBox.getSelectedIndex()] + " ?");
-                    notSet = false;
-                }
-                else {
-                    cautionPanel.setText("Choisir un client et une action PUIS le montant");
-                }
-
+                refreshPanel();
             }
         });
         confirmerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (clientBox.getSelectedIndex() == -1 || selectBox.getSelectedIndex() == -1 || montant == 0 || notSet) {
-                    String toPrint = "";
-                    if (clientBox.getSelectedIndex() == -1) toPrint += "Sélectionner un client dans la base de donnée\n";
-                    if (selectBox.getSelectedIndex() == -1) toPrint += "Sélectionner une action\n";
-                    if (montant == 0) toPrint += "Sélectionner un montant";
+                if (idxClient == -1 || idxSelect == -1 || montant == 0) {
+                    refreshPanel();
                 }
                 else {
-                    System.out.println(addOrRemove[selectBox.getSelectedIndex()] + " " + montant + "€ à " + exName[clientBox.getSelectedIndex()]);
+                    System.out.println(addOrRemove[idxSelect] + " " + montant + "€ à " + exName[idxClient]);
                     frame.dispose();
                 }
             }
         });
+    }
+
+    public void refreshPanel() {
+        if (idxClient == -1 || idxSelect == -1 || montant == 0) {
+            String toPrint = "";
+            if (idxClient == -1) toPrint += "Sélectionner un client dans la base de donnée\n";
+            else toPrint += exName[idxClient] + " a une caution de " + exCaution[idxClient] + "€\n";
+            if (idxSelect == -1) toPrint += "Sélectionner une action\n";
+            if (montant == 0) toPrint += "Sélectionner un montant";
+            cautionPanel.setText(toPrint);
+        }
+        else {
+            cautionPanel.setText(addOrRemove[idxSelect] + " " + montant + "€ à " + exName[idxClient] + " ?");
+        }
     }
 
 }
