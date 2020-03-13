@@ -1,3 +1,4 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -8,40 +9,38 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EventObject;
+import java.util.Map;
 
 public class LocateManga {
-    private JTree mangaTree;
+
+
     public JPanel rootPanel;
     private JComboBox clientBox;
     private JButton locateButton;
     private JTextPane locatePanel;
+    private JTextPane panierPane;
+    private JScrollPane scrollPane;
+    private JComboBox mangaBox;
+    private JPanel panel;
+    private JButton créditsButton;
     private JFrame frame;
     private final String[] exName = {"Pierre", "Paul", "Jean", "Jacques"};
     private final int[] exCredit = {1, 3, 42, 69};
     private final int[] exCaution = {10, 5, 0, 10};
     private int caution = -1, credit = -1;
+    private final String[] exManga = {"Bleach", "Naruto", "One Piece"};
+    private final int[] exLast = {75, 73, 93};
+    private ArrayList<Pair> panier = new ArrayList<Pair>();
 
 
     public LocateManga(JFrame frame) {
         this.frame = frame;
-        DefaultMutableTreeNode node1 = new DefaultMutableTreeNode("One Piece");
-        for (int i =1; i <= 93; i++) node1.add(new DefaultMutableTreeNode(new JCheckBox("One Piece " + i), false));
-        DefaultMutableTreeNode node2 = new DefaultMutableTreeNode("Naruto");
-        for (int i =1; i <= 73; i++) node2.add(new DefaultMutableTreeNode(new JCheckBox("Naruto " + i), false));
-        DefaultMutableTreeNode node3 = new DefaultMutableTreeNode("Bleach");
-        for (int i =1; i <= 75; i++) node3.add(new DefaultMutableTreeNode(new JCheckBox("Bleach " + i), false));
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Mangas");
-        root.add(node1);
-        root.add(node2);
-        root.add(node3);
-        RenduComposant rc = new RenduComposant();
-        EditComposant ec = new EditComposant();
-        DefaultTreeModel model = new DefaultTreeModel(root);
-        mangaTree.setModel(model);
-        mangaTree.setCellRenderer(rc);
-        mangaTree.setCellEditor(ec);
-        mangaTree.setEditable(true);
+        panel.setLayout(new GridLayout(0, 4, 10, 20));
         locatePanel.setText("Sélectionner une personne et des mangas");
         clientBox.setModel(new DefaultComboBoxModel(exName));
         clientBox.setSelectedIndex(-1);
@@ -52,63 +51,133 @@ public class LocateManga {
                 credit = exCredit[idx];
                 caution = exCaution[idx];
                 locatePanel.setText(exName[idx] + " a " + credit + " crédit(s) et " + caution + "€ de caution sur son compte.");
+                refreshPanier();
             }
         });
         locateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (credit >= panier.size() && panierCautionOk(panier, caution)) frame.dispose();
+            }
+        });
+        mangaBox.setModel(new DefaultComboBoxModel(exManga));
+        mangaBox.setSelectedIndex(-1);
+        mangaBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    panel.removeAll();
+                }
+                catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                for (int i = 0; i < exLast[mangaBox.getSelectedIndex()]; i++) {
+                    Pair pair = null;
+                    if (panier.contains(new Pair(mangaBox.getSelectedIndex(), i+1))) pair = panier.get(panier.indexOf(new Pair(mangaBox.getSelectedIndex(), i+1)));
+                    JCheckBox cb = new JCheckBox("" + (i+1));
+                    if (pair == null)  cb.addActionListener(new MyListener(cb, panier, new Pair(mangaBox.getSelectedIndex(), i+1)));
+                    else {
+                        cb.setSelected(true);
+                        cb.addActionListener(new MyListener(cb, panier, pair));
+                    }
+                    panel.add(cb);
+                }
+                panel.revalidate();
+                panel.repaint();
+            }
+        });
+        créditsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Ajouter des crédits");
+                frame.setContentPane(new AddCredit(frame).rootPanel);
+                //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                try {
+                    frame.setIconImage(ImageIO.read(new File("coin.png")));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                frame.pack();
+                //frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                //frame.setDefaultCloseOperation(); // Ce serait top de mettre l'affichage à jour direct
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
             }
         });
     }
 
+    private boolean panierCautionOk(ArrayList<Pair> panier, int caution) {
+        if (caution == 0) return false;
+        else if (caution == 5 && panier.size() <= 2) return true;
+        else if (caution == 10 && panier.size() <= 5) return true;
+        else return false;
+    }
 
-    class RenduComposant implements TreeCellRenderer {
-        public Component getTreeCellRendererComponent(JTree tree, Object obj, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus){
-            DefaultMutableTreeNode dmtcr = (DefaultMutableTreeNode)obj;
-            if(dmtcr.getUserObject() instanceof JCheckBox){
-                JCheckBox toto = (JCheckBox)dmtcr.getUserObject();
-                return toto;
-            } else {
-                JLabel toto = new JLabel((String)dmtcr.getUserObject());
-                return toto;
-            }
+    public class MyListener implements ActionListener {
+        JCheckBox cb;
+        ArrayList<Pair> panier;
+        Pair tome;
+
+
+        public MyListener(JCheckBox cb, ArrayList<Pair> panier, Pair tome) {
+            this.cb = cb;
+            this.panier = panier;
+            this.tome = tome;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (cb.isSelected()) panier.add(tome);
+            else panier.remove(tome);
+            refreshPanier();
         }
     }
 
-    class EditComposant implements TreeCellEditor {
-        public void addCellEditorListener(CellEditorListener l){
+
+    public void refreshPanier() {
+        Collections.sort(panier);
+        String toPrint = "";
+        if (clientBox.getSelectedIndex() == -1)  toPrint = "Panier anonyme\n";
+        else if (panier.size() > 0) toPrint += "Panier de " + exName[clientBox.getSelectedIndex()] + " : \n";
+        else toPrint = "Panier vide";
+        for (Pair p: panier) {
+            toPrint += exManga[p.manga] + " tome " + p.numero +"\n";
         }
-        public void cancelCellEditing() {
+        if (clientBox.getSelectedIndex()>-1) {
+            if (exCaution[clientBox.getSelectedIndex()] == 5 && panier.size() > 2)
+                toPrint += "Attention, caution trop faible !\n";
+            if (exCaution[clientBox.getSelectedIndex()] == 0)
+                toPrint += "Attention, pas de caution !\n";
+            if (panier.size() > exCredit[clientBox.getSelectedIndex()])
+                toPrint += "Attention, pas assez de crédits !\n";
         }
-        public Object getCellEditorValue(){
-            return this;
+        if (panier.size() > 5) toPrint += "Pas plus de 5 mangas à la fois";
+        panierPane.setText(toPrint);
+
+    }
+
+    private class Pair implements Comparable<Pair> {
+        public int manga;
+        public int numero;
+
+        public Pair(int manga, int numero) {
+            this.manga = manga;
+            this.numero = numero;
         }
-        public boolean isCellEditable(EventObject evt){
-            if(evt instanceof MouseEvent){
-                MouseEvent mevt = (MouseEvent) evt;
-                if (mevt.getClickCount() == 1){
-                    return true;
-                }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof Pair) {
+                Pair oPair = (Pair) obj;
+                return oPair.numero == numero  && oPair.manga == manga;
             }
             return false;
         }
-        public void removeCellEditorListener(CellEditorListener l){
-        }
-        public boolean shouldSelectCell(EventObject anEvent){
-            return true;
-        }
-        public boolean stopCellEditing(){
-            return false;
-        }
-        public Component getTreeCellEditorComponent(JTree tree, Object obj, boolean isSelected, boolean expanded, boolean leaf, int row){
-            DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)obj;
-            if ( dmtn.getUserObject() instanceof JCheckBox ) {
-                JCheckBox tata=(JCheckBox)dmtn.getUserObject();
-                tata.setEnabled(true);
-                return tata;
-            }
-            return null;
+
+        @Override
+        public int compareTo(Pair o) {
+            if (manga == o.manga) return numero-o.numero;
+            else return manga - o.manga;
         }
     }
 }
