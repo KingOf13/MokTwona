@@ -58,19 +58,19 @@ public class AddCredit {
 
     public static int convert(double montant) {
         if (montant <= 5) {
-            int ret = (int) montant * 3;
+            int ret = (int) Math.ceil(montant * 3);
             return ret;
         }
         else if (montant < 10) {
-            int ret = (int) (montant/0.3);
+            int ret = (int) Math.ceil(montant/0.3);
             return ret;
         }
         else if (montant<20){
-            int ret = (int) montant*4;
+            int ret = (int) Math.ceil(montant*4);
             return ret;
         }
         else {
-            int ret = (int) montant*5;
+            int ret = (int) Math.ceil(montant*5);
             return ret;
         }
     }
