@@ -37,7 +37,7 @@ public class AddCredit {
                     }
                     else {
                         admissible = true;
-                        convertPane.setText(amount + "");
+                        convertPane.setText(exName[clientBox.getSelectedIndex()] + " achète " + convert(amount) + " crédit(s) pour " + amount + "€");
                     }
                 }
                 catch (NumberFormatException ex) {
@@ -54,6 +54,25 @@ public class AddCredit {
                 }
             }
         });
+    }
+
+    public static int convert(double montant) {
+        if (montant <= 5) {
+            int ret = (int) montant * 3;
+            return ret;
+        }
+        else if (montant < 10) {
+            int ret = (int) (montant/0.3);
+            return ret;
+        }
+        else if (montant<20){
+            int ret = (int) montant*4;
+            return ret;
+        }
+        else {
+            int ret = (int) montant*5;
+            return ret;
+        }
     }
 
 }

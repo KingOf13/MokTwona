@@ -93,6 +93,11 @@ public class MokTwona {
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Ajouter un client");
                 frame.setContentPane(new CreateClient(frame).rootPanel);
+                try {
+                    frame.setIconImage(ImageIO.read(new File("person.png")));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
@@ -106,6 +111,11 @@ public class MokTwona {
                 JFrame frame = new JFrame("Ajouter des crédits");
                 frame.setContentPane(new AddCredit(frame).rootPanel);
                 //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                try {
+                    frame.setIconImage(ImageIO.read(new File("coin.png")));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 frame.pack();
                 //frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 frame.setLocationRelativeTo(null);
@@ -118,8 +128,30 @@ public class MokTwona {
                 JFrame frame = new JFrame("Modifier des cautions");
                 frame.setContentPane(new ModifyCaution(frame).rootPanel);
                 //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                try {
+                    frame.setIconImage(ImageIO.read(new File("banknote.png")));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 frame.pack();
                 //frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+        locationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Louer des mangas");
+                frame.setContentPane(new LocateManga(frame).rootPanel);
+                //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                try {
+                    frame.setIconImage(ImageIO.read(new File("add.png")));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                frame.pack();
+                frame.setExtendedState(JFrame.MAXIMIZED_VERT);
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
             }
