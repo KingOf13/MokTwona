@@ -50,14 +50,6 @@
           <text value="Louer un manga"/>
         </properties>
       </component>
-      <component id="9f755" class="javax.swing.JButton" binding="transactionButton">
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Transactions"/>
-        </properties>
-      </component>
       <component id="35922" class="javax.swing.JButton" binding="returnButton">
         <constraints>
           <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -66,20 +58,36 @@
           <text value="Retour d'un manga"/>
         </properties>
       </component>
+      <component id="db81a" class="javax.swing.JButton" binding="removeMangaButton">
+        <constraints>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Retirer un manga"/>
+        </properties>
+      </component>
       <component id="425aa" class="javax.swing.JButton" binding="addMangaButton">
         <constraints>
-          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Ajouter un manga"/>
         </properties>
       </component>
-      <component id="db81a" class="javax.swing.JButton" binding="removeMangaButton">
+      <component id="9f755" class="javax.swing.JButton" binding="transactionButton">
         <constraints>
-          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Retirer un manga"/>
+          <text value="Transactions"/>
+        </properties>
+      </component>
+      <component id="312dc" class="javax.swing.JButton" binding="prolongationButton">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Prolongation"/>
         </properties>
       </component>
     </children>

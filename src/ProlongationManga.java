@@ -2,28 +2,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
-public class ReturnManga {
-    public JPanel rootPanel;
+public class ProlongationManga {
     private JComboBox clientBox;
-    private JTextArea mangaArea;
-    private JTextArea timeArea;
-    private JButton rendreButton;
-    private JButton rendreEtLouerLaButton;
+    private JTextPane prolongerTextPane;
+    private JButton prolongerButton;
     private JPanel panel;
+    public JPanel rootPanel;
     private JFrame frame;
-    private boolean[] returnArray;
+
 
     private String[] exName = {"Pierre", "Paul", "Jean", "Jacques"};
 
@@ -35,17 +24,19 @@ public class ReturnManga {
 
     private LocalDate date1 = LocalDate.of(2020, 03, 22);
     private LocalDate date2 = LocalDate.of(2020, 03, 10);
+
     private LocalDate[] exDatePierre = {date1, date1, date1};
     private LocalDate[] exDatePaul = {date2, date2, date2};
     private LocalDate[] exDateJean = {date2, date2, date1, date1, date1};
     private LocalDate[] exDateJacques = {date1, date1, date1};
     private LocalDate[][] exDate = {exDatePierre, exDatePaul, exDateJean, exDateJacques};
 
-    public ReturnManga(JFrame frame) {
-        this.frame = frame;
-        panel.setLayout(new GridLayout(6, 1));
-        rendreEtLouerLaButton.setEnabled(false);
+    private boolean[] prolongationArray;
 
+    public ProlongationManga(JFrame frame) {
+        this.frame = frame;
+
+        panel.setLayout(new GridLayout(6, 1));
         clientBox.setModel(new DefaultComboBoxModel(exName));
         clientBox.setSelectedIndex(-1);
         clientBox.addActionListener(new ActionListener() {
@@ -54,7 +45,7 @@ public class ReturnManga {
                 String toPrint = "";
                 int idx = clientBox.getSelectedIndex();
                 panel.removeAll();
-                returnArray = new boolean[exPrets[idx].length];
+                prolongationArray = new boolean[exPrets[idx].length];
                 String[] pret = exPrets[idx];
                 LocalDate[] date = exDate[idx];
                 for (int i = 0; i < exPrets[idx].length; i++) {
@@ -62,16 +53,10 @@ public class ReturnManga {
                     int cmp = Utils.ecartDate(date[i]);
                     if (cmp < 0 ) toPrint += (-cmp) + " jour(s) de retard !";
                     else toPrint += cmp + " jour(s) avant la fin de la location";
-                    panel.add(new MyCheckBox(i, returnArray, toPrint));
+                    panel.add(new MyCheckBox(i, prolongationArray, toPrint));
                 }
                 panel.revalidate();
                 panel.repaint();
-            }
-        });
-        rendreButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
             }
         });
     }
