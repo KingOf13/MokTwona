@@ -13,12 +13,11 @@ public class AddCredit {
     private JFrame frame;
     private boolean admissible = false;
     private int creditToAdd = 0;
-    private final String[] exName = {"Pierre", "Paul", "Jean", "Jacques"};
     private int selected = -1;
 
     public AddCredit(JFrame frame) {
         this.frame = frame;
-        DefaultComboBoxModel model = new DefaultComboBoxModel( exName );
+        DefaultComboBoxModel model = new DefaultComboBoxModel( Example.exName );
         clientBox.setModel( model );
         clientBox.setSelectedIndex(-1);
         clientBox.addActionListener(new ActionListener() {
@@ -37,7 +36,8 @@ public class AddCredit {
                     }
                     else {
                         admissible = true;
-                        convertPane.setText(exName[clientBox.getSelectedIndex()] + " achète " + convert(amount) + " crédit(s) pour " + amount + "€");
+                        convertPane.setText(Example.exName[clientBox.getSelectedIndex()] + " achète " + convert(amount)
+                                + " crédit(s) pour " + amount + "€");
                     }
                 }
                 catch (NumberFormatException ex) {

@@ -11,4 +11,16 @@ public class Utils {
         int cmp = period.getDays();
         return cmp;
     }
+
+    public static String formatDate(int cmp){
+        String toPrint;
+        if (cmp < 0 ) toPrint = (-cmp) + " jour(s) de retard ! (" + computeRetard(-cmp) + " crédits de pénalité)";
+        else toPrint = cmp + " jour(s) avant la fin de la location";
+        return toPrint;
+    }
+
+    public static int computeRetard(int days) {
+        int weeks = (int) Math.ceil(days/7.0);
+        return weeks*2;
+    }
 }

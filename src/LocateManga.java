@@ -21,12 +21,8 @@ public class LocateManga {
     private JPanel panel;
     private JButton créditsButton;
     private JFrame frame;
-    private final String[] exName = {"Pierre", "Paul", "Jean", "Jacques"};
-    private final int[] exCredit = {1, 3, 42, 69};
-    private final int[] exCaution = {10, 5, 0, 10};
     private int caution = -1, credit = -1;
-    private final String[] exManga = {"Bleach", "Naruto", "One Piece"};
-    private final int[] exLast = {75, 73, 93};
+
     private ArrayList<Pair> panier = new ArrayList<Pair>();
 
 
@@ -34,15 +30,15 @@ public class LocateManga {
         this.frame = frame;
         panel.setLayout(new GridLayout(0, 4, 10, 20));
         locatePanel.setText("Sélectionner une personne et des mangas");
-        clientBox.setModel(new DefaultComboBoxModel(exName));
+        clientBox.setModel(new DefaultComboBoxModel(Example.exName));
         clientBox.setSelectedIndex(-1);
         clientBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int idx = clientBox.getSelectedIndex();
-                credit = exCredit[idx];
-                caution = exCaution[idx];
-                locatePanel.setText(exName[idx] + " a " + credit + " crédit(s) et " + caution + "€ de caution sur son compte.");
+                credit = Example.exCredit[idx];
+                caution = Example.exCaution[idx];
+                locatePanel.setText(Example.exName[idx] + " a " + credit + " crédit(s) et " + caution + "€ de caution sur son compte.");
                 refreshPanier();
             }
         });
@@ -52,7 +48,7 @@ public class LocateManga {
                 if (credit >= panier.size() && panierCautionOk(panier, caution)) frame.dispose();
             }
         });
-        mangaBox.setModel(new DefaultComboBoxModel(exManga));
+        mangaBox.setModel(new DefaultComboBoxModel(Example.exManga));
         mangaBox.setSelectedIndex(-1);
         mangaBox.addActionListener(new ActionListener() {
             @Override
@@ -63,11 +59,13 @@ public class LocateManga {
                 catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                for (int i = 0; i < exLast[mangaBox.getSelectedIndex()]; i++) {
+                for (int i = 0; i < Example.exLast[mangaBox.getSelectedIndex()]; i++) {
                     Pair pair = null;
-                    if (panier.contains(new Pair(mangaBox.getSelectedIndex(), i+1))) pair = panier.get(panier.indexOf(new Pair(mangaBox.getSelectedIndex(), i+1)));
+                    if (panier.contains(new Pair(mangaBox.getSelectedIndex(), i+1)))
+                        pair = panier.get(panier.indexOf(new Pair(mangaBox.getSelectedIndex(), i+1)));
                     JCheckBox cb = new JCheckBox("" + (i+1));
-                    if (pair == null)  cb.addActionListener(new MyListener(cb, panier, new Pair(mangaBox.getSelectedIndex(), i+1)));
+                    if (pair == null)
+                        cb.addActionListener(new MyListener(cb, panier, new Pair(mangaBox.getSelectedIndex(), i+1)));
                     else {
                         cb.setSelected(true);
                         cb.addActionListener(new MyListener(cb, panier, pair));
@@ -130,17 +128,17 @@ public class LocateManga {
         Collections.sort(panier);
         String toPrint = "";
         if (clientBox.getSelectedIndex() == -1)  toPrint = "Panier anonyme\n";
-        else if (panier.size() > 0) toPrint += "Panier de " + exName[clientBox.getSelectedIndex()] + " : \n";
+        else if (panier.size() > 0) toPrint += "Panier de " + Example.exName[clientBox.getSelectedIndex()] + " : \n";
         else toPrint = "Panier vide";
         for (Pair p: panier) {
-            toPrint += exManga[p.manga] + " tome " + p.numero +"\n";
+            toPrint += Example.exManga[p.manga] + " tome " + p.numero +"\n";
         }
         if (clientBox.getSelectedIndex()>-1) {
-            if (exCaution[clientBox.getSelectedIndex()] == 5 && panier.size() > 2)
+            if (Example.exCaution[clientBox.getSelectedIndex()] == 5 && panier.size() > 2)
                 toPrint += "Attention, caution trop faible !\n";
-            if (exCaution[clientBox.getSelectedIndex()] == 0)
+            if (Example.exCaution[clientBox.getSelectedIndex()] == 0)
                 toPrint += "Attention, pas de caution !\n";
-            if (panier.size() > exCredit[clientBox.getSelectedIndex()])
+            if (panier.size() > Example.exCredit[clientBox.getSelectedIndex()])
                 toPrint += "Attention, pas assez de crédits !\n";
         }
         if (panier.size() > 5) toPrint += "Pas plus de 5 mangas à la fois";

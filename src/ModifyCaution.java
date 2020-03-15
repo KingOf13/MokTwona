@@ -11,9 +11,7 @@ public class ModifyCaution {
     private JButton tenButton;
     private JButton confirmerButton;
     private JFrame frame;
-    private final String[] exName = {"Pierre", "Paul", "Jean", "Jacques"};
     private final String[] addOrRemove = {"Ajouter", "Retirer"};
-    private int[] exCaution = {10, 5 , 0, 5};
     private int montant = 0;
     private boolean notSet = true;
     private int idxClient = -1;
@@ -22,7 +20,7 @@ public class ModifyCaution {
     public ModifyCaution(JFrame frame) {
         this.frame = frame;
         ComboBoxModel model1 = new DefaultComboBoxModel(addOrRemove);
-        ComboBoxModel model2 = new DefaultComboBoxModel(exName);
+        ComboBoxModel model2 = new DefaultComboBoxModel(Example.exName);
         selectBox.setModel(model1);
         clientBox.setModel(model2);
         selectBox.setSelectedIndex(-1);
@@ -63,7 +61,7 @@ public class ModifyCaution {
                     refreshPanel();
                 }
                 else {
-                    System.out.println(addOrRemove[idxSelect] + " " + montant + "€ à " + exName[idxClient]);
+                    System.out.println(addOrRemove[idxSelect] + " " + montant + "€ à " + Example.exName[idxClient]);
                     frame.dispose();
                 }
             }
@@ -74,13 +72,13 @@ public class ModifyCaution {
         if (idxClient == -1 || idxSelect == -1 || montant == 0) {
             String toPrint = "";
             if (idxClient == -1) toPrint += "Sélectionner un client dans la base de donnée\n";
-            else toPrint += exName[idxClient] + " a une caution de " + exCaution[idxClient] + "€\n";
+            else toPrint += Example.exName[idxClient] + " a une caution de " + Example.exCaution[idxClient] + "€\n";
             if (idxSelect == -1) toPrint += "Sélectionner une action\n";
             if (montant == 0) toPrint += "Sélectionner un montant";
             cautionPanel.setText(toPrint);
         }
         else {
-            cautionPanel.setText(addOrRemove[idxSelect] + " " + montant + "€ à " + exName[idxClient] + " ?");
+            cautionPanel.setText(addOrRemove[idxSelect] + " " + montant + "€ à " + Example.exName[idxClient] + " ?");
         }
     }
 
