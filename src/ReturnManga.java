@@ -20,7 +20,7 @@ public class ReturnManga {
     private JTextArea mangaArea;
     private JTextArea timeArea;
     private JButton rendreButton;
-    private JButton rendreLouerLaSuiteButton;
+    private JButton rendreEtLouerLaButton;
     private JPanel panel;
     private JFrame frame;
     private boolean[] returnArray;
@@ -44,6 +44,7 @@ public class ReturnManga {
     public ReturnManga(JFrame frame) {
         this.frame = frame;
         panel.setLayout(new GridLayout(6, 1));
+        rendreEtLouerLaButton.setEnabled(false);
 
         clientBox.setModel(new DefaultComboBoxModel(exName));
         clientBox.setSelectedIndex(-1);
