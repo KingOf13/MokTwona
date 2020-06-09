@@ -14,6 +14,7 @@ public class Example {
 
     public static LocalDate date1 = LocalDate.of(2020, 03, 22);
     public static LocalDate date2 = LocalDate.of(2020, 03, 10);
+    public static LocalDate date3 = LocalDate.of(2020, 06, 10);
 
     public static LocalDate[] exDatePierre = {date1, date1, date1};
     public static LocalDate[] exDatePaul = {date2, date2, date2};
@@ -22,5 +23,6 @@ public class Example {
     public static LocalDate[][] exDate = {exDatePierre, exDatePaul, exDateJean, exDateJacques};
 
     public static final String[] exManga = {"Bleach", "Naruto", "One Piece"};
-    public static final int[] exLast = {75, 73, 93};
+    public static final int[] exLastPossessed = {68, 59, 88};
+    public static final int[] exLastPublished = {75, 73, 93};
 }

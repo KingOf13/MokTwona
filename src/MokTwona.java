@@ -24,15 +24,15 @@ public class MokTwona {
 
     public MokTwona(JFrame frame) {
         this.frame = frame;
-        setButton(addClientButton, "person.png", size);
-        setButton(addCreditButton, "coin.png", size);
-        setButton(cautionButton, "banknote.png", size);
-        setButton(locationButton, "location.png", size);
-        setButton(returnButton, "return.png", size);
-        setButton(addMangaButton, "add.png", size);
-        setButton(removeMangaButton, "remove.png", size);
-        setButton(transactionButton, "transaction.png", size);
-        setButton(prolongationButton, "prolongation.png", (int)(size*1.15), size);
+        setButton(addClientButton, "src/img/person.png", size);
+        setButton(addCreditButton, "src/img/coin.png", size);
+        setButton(cautionButton, "src/img/banknote.png", size);
+        setButton(locationButton, "src/img/location.png", size);
+        setButton(returnButton, "src/img/return.png", size);
+        setButton(addMangaButton, "src/img/add.png", size);
+        setButton(removeMangaButton, "src/img/remove.png", size);
+        setButton(transactionButton, "src/img/transaction.png", size);
+        setButton(prolongationButton, "src/img/prolongation.png", (int)(size*1.15), size);
 
         /*JFrame frameTemp = new JFrame("Ajouter un client");
         frameTemp.setPreferredSize(new Dimension(425, 225));
@@ -52,7 +52,7 @@ public class MokTwona {
                 frame.setContentPane(new CreateClient(frame).rootPanel);
                 frame.setPreferredSize(new Dimension(430, 225));
                 try {
-                    frame.setIconImage(ImageIO.read(new File("person.png")));
+                    frame.setIconImage(ImageIO.read(new File("src/img/person.png")));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -70,7 +70,7 @@ public class MokTwona {
                 frame.setContentPane(new AddCredit(frame).rootPanel);
                 //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 try {
-                    frame.setIconImage(ImageIO.read(new File("coin.png")));
+                    frame.setIconImage(ImageIO.read(new File("src/img/coin.png")));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -87,7 +87,7 @@ public class MokTwona {
                 frame.setContentPane(new ModifyCaution(frame).rootPanel);
                 //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 try {
-                    frame.setIconImage(ImageIO.read(new File("banknote.png")));
+                    frame.setIconImage(ImageIO.read(new File("src/img/banknote.png")));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -104,7 +104,7 @@ public class MokTwona {
                 frame.setContentPane(new LocateManga(frame).rootPanel);
                 //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 try {
-                    frame.setIconImage(ImageIO.read(new File("location.png")));
+                    frame.setIconImage(ImageIO.read(new File("src/img/location.png")));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -121,7 +121,7 @@ public class MokTwona {
                 frame.setContentPane(new ReturnManga(frame).rootPanel);
                 //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 try {
-                    frame.setIconImage(ImageIO.read(new File("return.png")));
+                    frame.setIconImage(ImageIO.read(new File("src/img/return.png")));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -138,7 +138,24 @@ public class MokTwona {
                 frame.setContentPane(new ProlongationManga(frame).rootPanel);
                 //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 try {
-                    frame.setIconImage(ImageIO.read(new File("prolongation.png")));
+                    frame.setIconImage(ImageIO.read(new File("src/img/prolongation.png")));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                frame.pack();
+                //frame.setExtendedState(JFrame.MAXIMIZED_VERT);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+        addMangaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Ajouter un mangas");
+                frame.setContentPane(new AddManga(frame).rootPanel);
+                //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                try {
+                    frame.setIconImage(ImageIO.read(new File("src/img/add.png")));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -179,7 +196,7 @@ public class MokTwona {
         frame.setContentPane(new MokTwona(frame).rootPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         try {
-            frame.setIconImage(ImageIO.read(new File("kotmanga.png")));
+            frame.setIconImage(ImageIO.read(new File("src/img/kotmanga.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }

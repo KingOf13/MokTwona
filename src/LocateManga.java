@@ -59,7 +59,7 @@ public class LocateManga {
                 catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                for (int i = 0; i < Example.exLast[mangaBox.getSelectedIndex()]; i++) {
+                for (int i = 0; i < Example.exLastPossessed[mangaBox.getSelectedIndex()]; i++) {
                     Pair pair = null;
                     if (panier.contains(new Pair(mangaBox.getSelectedIndex(), i+1)))
                         pair = panier.get(panier.indexOf(new Pair(mangaBox.getSelectedIndex(), i+1)));
