@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 
 public class AddCredit {
     private JTextPane clientTextPane;
@@ -14,10 +15,13 @@ public class AddCredit {
     private boolean admissible = false;
     private int creditToAdd = 0;
     private int selected = -1;
+    private Person[] people;
+    private double amount = 0;
 
     public AddCredit(JFrame frame) {
         this.frame = frame;
-        DefaultComboBoxModel model = new DefaultComboBoxModel( Example.exName );
+        people = MokTwona.db.getPeople();
+        DefaultComboBoxModel model = new DefaultComboBoxModel(people);
         clientBox.setModel( model );
         clientBox.setSelectedIndex(-1);
         clientBox.addActionListener(new ActionListener() {
@@ -30,13 +34,14 @@ public class AddCredit {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Double amount = Double.parseDouble(amountField.getText().trim());
+                    amount = Double.parseDouble(amountField.getText().trim());
+                    creditToAdd = convert(amount);
                     if (selected == -1) {
                         convertPane.setText("Selectionnez quelqu'un à qui ajouter des crédits!");
                     }
                     else {
                         admissible = true;
-                        convertPane.setText(Example.exName[clientBox.getSelectedIndex()] + " achète " + convert(amount)
+                        convertPane.setText(people[selected].toString() + " achète " + creditToAdd
                                 + " crédit(s) pour " + amount + "€");
                     }
                 }
@@ -50,6 +55,8 @@ public class AddCredit {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (admissible) {
+                    MokTwona.db.add(new Transaction(LocalDateTime.now(), amount, "Achat de crédit", people[selected]));
+                    people[selected].addCredit(creditToAdd);
                     frame.dispose();
                 }
             }

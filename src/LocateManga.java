@@ -20,35 +20,44 @@ public class LocateManga {
     private JComboBox mangaBox;
     private JPanel panel;
     private JButton créditsButton;
+    private JCheckBox freeCheckBox;
+    private JCheckBox crewCheckBox;
     private JFrame frame;
     private int caution = -1, credit = -1;
 
-    private ArrayList<Pair> panier = new ArrayList<Pair>();
-
+    private Panier panier = new Panier(50);
+    private Manga[] tomes = null;
+    private Serie[] series = null;
+    private Person[] people = null;
 
     public LocateManga(JFrame frame) {
         this.frame = frame;
         panel.setLayout(new GridLayout(0, 4, 10, 20));
         locatePanel.setText("Sélectionner une personne et des mangas");
-        clientBox.setModel(new DefaultComboBoxModel(Example.exName));
+        people = MokTwona.db.getPeople();
+        clientBox.setModel(new DefaultComboBoxModel(people));
         clientBox.setSelectedIndex(-1);
         clientBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int idx = clientBox.getSelectedIndex();
-                credit = Example.exCredit[idx];
-                caution = Example.exCaution[idx];
-                locatePanel.setText(Example.exName[idx] + " a " + credit + " crédit(s) et " + caution + "€ de caution sur son compte.");
+                credit = people[idx].getCredit();
+                caution = people[idx].getCaution();
+                locatePanel.setText(people[idx] + " a " + credit + " crédit(s) et " + caution + "€ de caution sur son compte.");
                 refreshPanier();
             }
         });
         locateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (credit >= panier.size() && panierCautionOk(panier, caution)) frame.dispose();
+                if ((credit >= panier.size() || freeCheckBox.isSelected()) && (panierCautionOk(panier, caution) || crewCheckBox.isSelected())) {
+                    panier.locate();
+                    frame.dispose();
+                }
             }
         });
-        mangaBox.setModel(new DefaultComboBoxModel(Example.exManga));
+        series = MokTwona.db.getSeries();
+        mangaBox.setModel(new DefaultComboBoxModel(series));
         mangaBox.setSelectedIndex(-1);
         mangaBox.addActionListener(new ActionListener() {
             @Override
@@ -59,17 +68,12 @@ public class LocateManga {
                 catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                for (int i = 0; i < Example.exLastPossessed[mangaBox.getSelectedIndex()]; i++) {
-                    Pair pair = null;
-                    if (panier.contains(new Pair(mangaBox.getSelectedIndex(), i+1)))
-                        pair = panier.get(panier.indexOf(new Pair(mangaBox.getSelectedIndex(), i+1)));
-                    JCheckBox cb = new JCheckBox("" + (i+1));
-                    if (pair == null)
-                        cb.addActionListener(new MyListener(cb, panier, new Pair(mangaBox.getSelectedIndex(), i+1)));
-                    else {
-                        cb.setSelected(true);
-                        cb.addActionListener(new MyListener(cb, panier, pair));
-                    }
+                tomes = series[mangaBox.getSelectedIndex()].getTomes();
+                for (int i = 0; i < tomes.length ; i++) {
+                    JCheckBox cb = new JCheckBox(tomes[i].toString());
+                    cb.addActionListener(new MyListener(cb, panier, tomes[i]));
+                    if (panier.contains(tomes[i])) cb.setSelected(true);
+                    if (tomes[i].isLoue()) cb.setEnabled(false);
                     panel.add(cb);
                 }
                 panel.revalidate();
@@ -94,9 +98,11 @@ public class LocateManga {
                 frame.setVisible(true);
             }
         });
+        freeCheckBox.setText("Location offerte");
+        crewCheckBox.setText("Membre du kot");
     }
 
-    private boolean panierCautionOk(ArrayList<Pair> panier, int caution) {
+    private boolean panierCautionOk(Panier panier, int caution) {
         if (caution == 0) return false;
         else if (caution == 5 && panier.size() <= 2) return true;
         else if (caution == 10 && panier.size() <= 5) return true;
@@ -105,11 +111,11 @@ public class LocateManga {
 
     public class MyListener implements ActionListener {
         JCheckBox cb;
-        ArrayList<Pair> panier;
-        Pair tome;
+        Panier panier;
+        Manga tome;
 
 
-        public MyListener(JCheckBox cb, ArrayList<Pair> panier, Pair tome) {
+        public MyListener(JCheckBox cb, Panier panier, Manga tome) {
             this.cb = cb;
             this.panier = panier;
             this.tome = tome;
@@ -117,57 +123,71 @@ public class LocateManga {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (cb.isSelected()) panier.add(tome);
-            else panier.remove(tome);
+            if (cb.isSelected() && panier.addToCart(tome, crewCheckBox.isSelected()));
+            else panier.removeFromCart(tome);
             refreshPanier();
         }
     }
 
 
     public void refreshPanier() {
-        Collections.sort(panier);
-        String toPrint = "";
-        if (clientBox.getSelectedIndex() == -1)  toPrint = "Panier anonyme\n";
-        else if (panier.size() > 0) toPrint += "Panier de " + Example.exName[clientBox.getSelectedIndex()] + " : \n";
-        else toPrint = "Panier vide";
-        for (Pair p: panier) {
-            toPrint += Example.exManga[p.manga] + " tome " + p.numero +"\n";
-        }
-        if (clientBox.getSelectedIndex()>-1) {
-            if (Example.exCaution[clientBox.getSelectedIndex()] == 5 && panier.size() > 2)
-                toPrint += "Attention, caution trop faible !\n";
-            if (Example.exCaution[clientBox.getSelectedIndex()] == 0)
-                toPrint += "Attention, pas de caution !\n";
-            if (panier.size() > Example.exCredit[clientBox.getSelectedIndex()])
-                toPrint += "Attention, pas assez de crédits !\n";
-        }
-        if (panier.size() > 5) toPrint += "Pas plus de 5 mangas à la fois";
-        panierPane.setText(toPrint);
+        panierPane.setText(panier.toString());
 
     }
+    private class Panier {
+        private ArrayList<Manga> mPanier = new ArrayList<Manga>();
+        private final int capacity;
 
-    private class Pair implements Comparable<Pair> {
-        public int manga;
-        public int numero;
+        private Panier(int capacity) {
+            this.capacity = capacity;
+        }
 
-        public Pair(int manga, int numero) {
-            this.manga = manga;
-            this.numero = numero;
+        public boolean addToCart(Manga manga, boolean crew) {
+            if (mPanier.size() >= capacity && !crew) return false;
+            return mPanier.add(manga);
+        }
+
+        public void removeFromCart(Manga manga) {
+            mPanier.remove(manga);
+        }
+
+        public boolean contains(Manga manga) {
+            return mPanier.contains(manga);
+        }
+
+        public int size() {
+            return mPanier.size();
+        }
+
+        public void sort() {
+            Collections.sort(mPanier);
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof Pair) {
-                Pair oPair = (Pair) obj;
-                return oPair.numero == numero  && oPair.manga == manga;
+        public String toString() {
+            if (!mPanier.isEmpty()) Collections.sort(mPanier);
+            String toPrint = "";
+            if (clientBox.getSelectedIndex() == -1)  toPrint = "Panier anonyme\n";
+            else if (mPanier.size() > 0) toPrint += "Panier de " + people[clientBox.getSelectedIndex()] + " : \n";
+            else toPrint = "Panier vide\n";
+            for (Manga manga: mPanier) {
+                toPrint += manga.completeString() +"\n";
             }
-            return false;
+            if (clientBox.getSelectedIndex()>-1) {
+                if (people[clientBox.getSelectedIndex()].capacityRemaining() < mPanier.size())
+                    toPrint += "Attention, caution trop faible !\n";
+                if (people[clientBox.getSelectedIndex()].getCaution() == 0)
+                    toPrint += "Attention, pas de caution !\n";
+                if (mPanier.size() > people[clientBox.getSelectedIndex()].getCredit())
+                    toPrint += "Attention, pas assez de crédits !\n";
+            }
+            return toPrint;
         }
 
-        @Override
-        public int compareTo(Pair o) {
-            if (manga == o.manga) return numero-o.numero;
-            else return manga - o.manga;
+        public void locate() {
+            for (Manga m: mPanier) {
+                m.locate(people[clientBox.getSelectedIndex()], crewCheckBox.isSelected(), freeCheckBox.isSelected());
+            }
         }
     }
 }

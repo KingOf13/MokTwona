@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 
 public class CreateClient {
     private JTextField nameField;
@@ -34,6 +35,7 @@ public class CreateClient {
         System.out.println("Adresse : " + address);
         System.out.println("Mail : " + mail);
         System.out.println("GSM : " + gsm);
+        MokTwona.db.add(new Person(name, prenom, mail, gsm, address, LocalDateTime.now(), 0, 1));
         frame.dispose();
     }
 }

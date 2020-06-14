@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 
 public class ModifyCaution {
     public JPanel rootPanel;
@@ -16,11 +17,13 @@ public class ModifyCaution {
     private boolean notSet = true;
     private int idxClient = -1;
     private int idxSelect = -1;
+    private Person[] people;
 
     public ModifyCaution(JFrame frame) {
         this.frame = frame;
+        people = MokTwona.db.getPeople();
         ComboBoxModel model1 = new DefaultComboBoxModel(addOrRemove);
-        ComboBoxModel model2 = new DefaultComboBoxModel(Example.exName);
+        ComboBoxModel model2 = new DefaultComboBoxModel(people);
         selectBox.setModel(model1);
         clientBox.setModel(model2);
         selectBox.setSelectedIndex(-1);
@@ -61,8 +64,22 @@ public class ModifyCaution {
                     refreshPanel();
                 }
                 else {
-                    System.out.println(addOrRemove[idxSelect] + " " + montant + "€ à " + Example.exName[idxClient]);
-                    frame.dispose();
+                    if (idxSelect == 0) { // Ajouter
+                        if ((montant + people[idxClient].getCaution()) <= 10) {
+                            MokTwona.db.add(new Transaction(LocalDateTime.now(), montant, "Ajout de caution", people[idxClient]));
+                            people[idxClient].setCaution(montant + people[idxClient].getCaution());
+                            frame.dispose();
+                        }
+                        else cautionPanel.setText("Action non permise - changez les données");
+                    }
+                    else {
+                        if ((people[idxClient].getCaution() - montant) >= 0) {
+                            MokTwona.db.add(new Transaction(LocalDateTime.now(), -montant, "Retrait de caution", people[idxClient]));
+                            people[idxClient].setCaution(people[idxClient].getCaution() - montant);
+                            frame.dispose();
+                        }
+                        else cautionPanel.setText("Action non permise - changez les données");
+                    }
                 }
             }
         });
@@ -72,13 +89,13 @@ public class ModifyCaution {
         if (idxClient == -1 || idxSelect == -1 || montant == 0) {
             String toPrint = "";
             if (idxClient == -1) toPrint += "Sélectionner un client dans la base de donnée\n";
-            else toPrint += Example.exName[idxClient] + " a une caution de " + Example.exCaution[idxClient] + "€\n";
+            else toPrint += people[idxClient] + " a une caution de " + people[idxClient].getCaution() + "€\n";
             if (idxSelect == -1) toPrint += "Sélectionner une action\n";
             if (montant == 0) toPrint += "Sélectionner un montant";
             cautionPanel.setText(toPrint);
         }
         else {
-            cautionPanel.setText(addOrRemove[idxSelect] + " " + montant + "€ à " + Example.exName[idxClient] + " ?");
+            cautionPanel.setText(addOrRemove[idxSelect] + " " + montant + "€ à " + people[idxClient] + " ?");
         }
     }
 

@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 
 public class ReturnManga {
     public JPanel rootPanel;
@@ -12,15 +11,21 @@ public class ReturnManga {
     private JButton rendreButton;
     private JButton rendreEtLouerLaButton;
     private JPanel panel;
+    private JCheckBox noChargeBox;
     private JFrame frame;
     private boolean[] returnArray;
+    private Pret[] prets = new Pret[0];
+    private Person[] people;
 
     public ReturnManga(JFrame frame) {
         this.frame = frame;
+        people = MokTwona.db.getPeople();
         panel.setLayout(new GridLayout(6, 1));
         rendreEtLouerLaButton.setEnabled(false);
+        noChargeBox.setText("Ne pas appliquer les pénalités de retard");
 
-        clientBox.setModel(new DefaultComboBoxModel(Example.exName));
+        DefaultComboBoxModel model = new DefaultComboBoxModel(people);
+        clientBox.setModel(model);
         clientBox.setSelectedIndex(-1);
         clientBox.addActionListener(new ActionListener() {
             @Override
@@ -28,13 +33,10 @@ public class ReturnManga {
                 String toPrint = "";
                 int idx = clientBox.getSelectedIndex();
                 panel.removeAll();
-                returnArray = new boolean[Example.exPrets[idx].length];
-                String[] pret = Example.exPrets[idx];
-                LocalDate[] date = Example.exDate[idx];
-                for (int i = 0; i < Example.exPrets[idx].length; i++) {
-                    toPrint = pret[i] + " - ";
-                    toPrint += Utils.formatDate(Utils.ecartDate(date[i]));
-                    panel.add(new MyCheckBox(i, returnArray, toPrint));
+                prets = people[idx].getPrets();
+                returnArray = new boolean[prets.length];
+                for (int i = 0; i < prets.length; i++) {
+                    panel.add(new MyCheckBox(i, returnArray, prets[i].compactString()));
                 }
                 panel.revalidate();
                 panel.repaint();
@@ -43,6 +45,9 @@ public class ReturnManga {
         rendreButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int penalties = 0;
+                for (int i = 0; i < returnArray.length; i ++) if (returnArray[i]) penalties += prets[i].conclude();
+                if (!noChargeBox.isSelected()) people[clientBox.getSelectedIndex()].addCredit(-penalties);
                 frame.dispose();
             }
         });

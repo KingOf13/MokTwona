@@ -1,10 +1,11 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
  * Class containing a Manga, as represented in the DB
  */
 public class Manga implements Comparable {
-    private static int nextID = 1;
+    public static int loanDuration = 14;
 
     private final int ID;
     private final int numero;
@@ -14,10 +15,10 @@ public class Manga implements Comparable {
     private boolean loue;
     private String etat;
     private final LocalDateTime addedTime;
+    private static Database db = null;
 
     public Manga(int id, Serie serie, int numero, Person proprio, LocalDateTime addedTime, String etat, boolean loue, int nbLocation) {
         ID = id;
-        if (id >= nextID) nextID = id + 1;
         this.numero = numero;
         this.serie = serie;
         this.nbLocation = nbLocation;
@@ -25,12 +26,11 @@ public class Manga implements Comparable {
         this.loue = loue;
         this.etat = etat;
         this.addedTime = addedTime;
-        if (serie.getLastPossessed() < numero) serie.setLastPossessed(numero);
-        if (serie.getLastPublished() < numero) serie.setLastPublished(numero);
+        serie.addTome(this);
     }
 
     public Manga(Serie serie, int numero, Person proprio, LocalDateTime addedTime, String etat, boolean loue, int nbLocation) {
-        ID = nextID;
+        ID = db.nextMangaId();
         this.numero = numero;
         this.serie = serie;
         this.nbLocation = nbLocation;
@@ -38,13 +38,8 @@ public class Manga implements Comparable {
         this.loue = loue;
         this.etat = etat;
         this.addedTime = addedTime;
-        nextID ++;
-        if (serie.getLastPossessed() < numero) serie.setLastPossessed(numero);
-        if (serie.getLastPublished() < numero) serie.setLastPublished(numero);
-    }
-
-    public static int getNextID() {
-        return nextID;
+        serie.addTome(this);
+        db.add(this);
     }
 
     public int getID() {
@@ -75,20 +70,38 @@ public class Manga implements Comparable {
         return addedTime;
     }
 
-    public static void setNextID(int nextID) {
-        Manga.nextID = nextID;
-    }
-
     public void setEtat(String etat) {
         this.etat = etat;
+        updateInDB();
     }
 
-    public void setLoue(boolean loue) {
-        this.loue = loue;
+    public void returnManga() {
+        loue = false;
+        updateInDB();
+    }
+
+    public Pret locate(Person person, boolean crew, boolean free) {
+        if (loue) return null;
+        Pret pret = new Pret(this, person, LocalDate.now().plusDays(loanDuration));
+        if (!person.addPret(pret, crew, free)) return null;
+        if  (db.add(pret)) {
+            loue = true;
+            nbLocation ++;
+            updateInDB();
+            return pret;
+        }
+        else return null;
+    }
+
+    public static boolean setDb(Database newdb) {
+        if (db != null) return false;
+        db = newdb;
+        return true;
     }
 
     public void setNbLocation(int nbLocation) {
         this.nbLocation = nbLocation;
+        updateInDB();
     }
 
     @Override
@@ -119,5 +132,13 @@ public class Manga implements Comparable {
             cmp = -1;
         }
         return cmp == 0;
+    }
+
+    private void updateInDB() {
+        db.update(this);
+    }
+
+    public String completeString() {
+        return serie.getNom() + " tome " + numero;
     }
 }

@@ -1,17 +1,30 @@
 import java.util.ArrayList;
 
 public class Tag implements Comparable{
-    private String name;
-    private final ArrayList<Serie> series;
+    private final String name;
+    private final ArrayList<Serie> series= new ArrayList<Serie>();
+    private static Database db = null;
+    private int size = 0;
 
     public Tag(String name) {
         this.name = name;
-        series = new ArrayList<Serie>();
+    }
+
+    public Tag(String name, Serie serie) {
+        this.name = name;
+        series.add(serie);
     }
 
     public boolean add(Serie serie) {
         if (series.contains(serie)) return false;
+        size ++;
         return series.add(serie);
+    }
+
+    public static boolean setDb(Database newdb) {
+        if (db != null) return false;
+        db = newdb;
+        return true;
     }
 
     @Override
@@ -31,16 +44,21 @@ public class Tag implements Comparable{
         return cmp == 0;
     }
 
+    public boolean containsSerie(Serie serie) {
+        return series.contains(serie);
+    }
+
     public String getName() {
         return name;
     }
 
-    public ArrayList<Serie> getSeries() {
-        return series;
+    public Serie[] getSeries() {
+        return series.toArray(new Serie[size]);
     }
 
-    public void setName(String name) {
-        this.name = name;
+
+    private void updateInDB() {
+
     }
 
 }

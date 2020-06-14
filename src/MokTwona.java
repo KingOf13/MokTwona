@@ -18,7 +18,9 @@ public class MokTwona {
     private JButton removeMangaButton;
     private JButton transactionButton;
     private JButton prolongationButton;
+    private JButton addSerieButton;
     private JFrame frame;
+    public static final Database db = Database.initDB();
 
     private final int size = 125;
 
@@ -29,6 +31,7 @@ public class MokTwona {
         setButton(cautionButton, "src/img/banknote.png", size);
         setButton(locationButton, "src/img/location.png", size);
         setButton(returnButton, "src/img/return.png", size);
+        setButton(addSerieButton, "src/img/add.png", size);
         setButton(addMangaButton, "src/img/add.png", size);
         setButton(removeMangaButton, "src/img/remove.png", size);
         setButton(transactionButton, "src/img/transaction.png", size);
@@ -156,6 +159,57 @@ public class MokTwona {
                 //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 try {
                     frame.setIconImage(ImageIO.read(new File("src/img/add.png")));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                frame.pack();
+                //frame.setExtendedState(JFrame.MAXIMIZED_VERT);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+        addSerieButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Ajouter une série");
+                frame.setContentPane(new AddSerie(frame).rootPanel);
+                //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                try {
+                    frame.setIconImage(ImageIO.read(new File("src/img/add.png")));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                frame.pack();
+                //frame.setExtendedState(JFrame.MAXIMIZED_VERT);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+        transactionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Transactions");
+                frame.setContentPane(new ShowTransactions(frame).rootPanel);
+                //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                try {
+                    frame.setIconImage(ImageIO.read(new File("src/img/transaction.png")));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                frame.pack();
+                //frame.setExtendedState(JFrame.MAXIMIZED_VERT);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+        removeMangaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Supprimer un manga");
+                frame.setContentPane(new RetireManga(frame).rootPanel);
+                //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                try {
+                    frame.setIconImage(ImageIO.read(new File("src/img/remove.png")));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
