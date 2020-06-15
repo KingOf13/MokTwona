@@ -374,7 +374,8 @@ public class Database {
     }
 
     public boolean add(Pret pret) {
-        return DBHandler.insertPret(connection, pret);
+        if (DBHandler.insertPret(connection, pret)) return prets.add(pret);
+        else return false;
     }
 
     public boolean add(Transaction transaction) {
@@ -441,10 +442,17 @@ public class Database {
     }
 
     public void removeFromPret(Manga manga) {
-        System.out.println("REMOVE FROM PRET");
-        for (Pret p: prets) if (p.getTome().equals(manga)) {
-            prets.remove(p);
-            p.getPerson().removeFromPret(p);
+        Pret toRemove = null;
+        boolean found = false;
+        for (Pret p: prets){
+            if (p.getTome().equals(manga)) {
+                toRemove = p;
+                found = true;
+          }
+        }
+        if (found) {
+            toRemove.getPerson().removeFromPret(toRemove);
+            prets.remove(toRemove);
         }
         DBHandler.removeFromPret(connection, manga);
     }
