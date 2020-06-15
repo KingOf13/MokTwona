@@ -13,6 +13,8 @@ public class CreateClient {
     private JTextField adressField;
     private JTextField mailField;
     private JTextField gsmField;
+    private JTextField addressField1;
+    private JTextField addressField2;
     private JFrame frame;
 
     public CreateClient(JFrame frame) {
@@ -29,7 +31,7 @@ public class CreateClient {
         String prenom = prenomField.getText().trim();
         String name = nameField.getText().trim();
         String mail = mailField.getText().trim();
-        String address = adressField.getText().trim();
+        String address = addressField1.getText().trim() + "\n" + addressField2.getText().trim();
         String gsm = gsmField.getText().trim();
         System.out.println("Nouveau client : " + name + ", " + prenom);
         System.out.println("Adresse : " + address);

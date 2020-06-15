@@ -184,6 +184,13 @@ public class Person implements Comparable {
         return true;
     }
 
+    public void modify(String address, String mail, String gsm) {
+        this.address = address;
+        this.email = mail;
+        this.gsm = gsm;
+        updateInDB();
+    }
+
     @Override
     public String toString() {
         return prenom + " " + nom;
