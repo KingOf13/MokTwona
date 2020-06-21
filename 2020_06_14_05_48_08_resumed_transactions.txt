@@ -1,0 +1,4 @@
+Imprimé le 14 juin 2020 à 17:48:08
+DATE 		|	 TYPE 		|	 PERSONNE 	|	 MONTANT
+14/06/20 17:48	|	Ajout de caution	|	Julien Aigret	|	10.0€
+TOTAL : 10.0€

@@ -55,6 +55,7 @@ public class AddCredit {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (admissible) {
+                    if (!Utils.confirmationDialog("Ajouter " + creditToAdd + " crédits à " + people[selected] + " pour " + amount + "€ ?")) return;
                     MokTwona.db.add(new Transaction(LocalDateTime.now(), amount, "Achat de crédit", people[selected]));
                     people[selected].addCredit(creditToAdd);
                     frame.dispose();

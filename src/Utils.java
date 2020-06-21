@@ -1,9 +1,27 @@
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneOffset;
 
 public class Utils {
+
+    public static boolean confirmationDialog(String question) {
+        JFrame frame = new JFrame();
+        try {
+            frame.setIconImage(ImageIO.read(new File("src/img/question.jpg")));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        JOptionPane d = new JOptionPane();
+        int retour = d.showConfirmDialog(frame, question,
+                "Confirmation", JOptionPane.OK_CANCEL_OPTION);
+        frame.dispose();
+        return retour == 0;
+    }
 
     public static int ecartDate(LocalDate fin) {
         Period period;

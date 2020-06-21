@@ -65,6 +65,8 @@ public class AddManga {
         ajouterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (!Utils.confirmationDialog("Ajouter le tome " + numero + " à la série " + series[mangaIdx].getNom()
+                                + " possédé par " + people[proprioBox.getSelectedIndex()] + "?")) return;
                 Manga manga = new Manga(series[mangaIdx], numero, people[proprioBox.getSelectedIndex()], LocalDateTime.now(),
                         stateField.getText().trim(), false, 0);
 

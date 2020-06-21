@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -9,6 +10,31 @@ import java.util.prefs.Preferences;
 
 public class Test {
    public static void main(String [] args){
+       testTabbedPaneExample();
+   }
+
+
+    public static void testTabbedPaneExample(){
+        JFrame f;
+        f=new JFrame();
+        JPanel p1=new JPanel();
+        p1.add(new AddCredit(f).rootPanel);
+        JPanel p2=new JPanel();
+        p2.add(new ModifyCaution(f).rootPanel);
+        JPanel p3=new JPanel();
+        p3.add(new CreateClient(f).rootPanel);
+        JTabbedPane tp=new JTabbedPane();
+        tp.setBounds(50,0,500,500);
+        tp.add("main",p1);
+        tp.add("visit",p2);
+        tp.add("help",p3);
+        f.add(tp);
+        f.setSize(500,500);
+        f.setLayout(null);
+        f.setVisible(true);
+    }
+
+    public static void testFormatDate() {
        LocalDateTime n = LocalDateTime.now();
        OffsetDateTime odt = OffsetDateTime.now( ZoneId.systemDefault() ) ;
        DateTimeFormatter f = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)

@@ -33,10 +33,11 @@ public class CreateClient {
         String mail = mailField.getText().trim();
         String address = addressField1.getText().trim() + "\n" + addressField2.getText().trim();
         String gsm = gsmField.getText().trim();
-        System.out.println("Nouveau client : " + name + ", " + prenom);
-        System.out.println("Adresse : " + address);
-        System.out.println("Mail : " + mail);
-        System.out.println("GSM : " + gsm);
+        String message = "Ajouter ce client ?\nNom : " + name + ", " + prenom + "\n";
+        message += "Adresse : " + address + "\n";
+        message += "E-mail : " + mail + "\n";
+        message += "GSM : " + gsm + "\n";
+        if (!Utils.confirmationDialog(message))
         MokTwona.db.add(new Person(name, prenom, mail, gsm, address, LocalDateTime.now(), 0, 1));
         frame.dispose();
     }

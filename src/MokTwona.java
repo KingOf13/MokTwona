@@ -40,17 +40,6 @@ public class MokTwona {
         setButton(prolongationButton, "src/img/prolongation.png", (int)(size*1.15), size);
         setButton(modifyClientButton, "src/img/person.png", size);
 
-        /*JFrame frameTemp = new JFrame("Ajouter un client");
-        frameTemp.setPreferredSize(new Dimension(425, 225));
-        addClientButton.addActionListener(new MyListener("person.png", new CreateClient(frameTemp).rootPanel, frameTemp));
-        frameTemp = new JFrame("Acheter des crédits");
-        addCreditButton.addActionListener(new MyListener("coin.png", new AddCredit(frameTemp).rootPanel, frameTemp));
-        frameTemp = new JFrame("Modifier des cautions");
-        cautionButton.addActionListener(new MyListener("banknote.png", new ModifyCaution(frameTemp).rootPanel, frameTemp));
-        frameTemp = new JFrame("Louer des mangas");
-        locationButton.addActionListener(new MyListener("location.png", new LocateManga(frameTemp).rootPanel, frameTemp, true, JFrame.MAXIMIZED_VERT));
-        frameTemp = new JFrame("Rendre des mangas");
-        returnButton.addActionListener(new MyListener("return.png", new ReturnManga(frameTemp).rootPanel, frameTemp));*/
         addClientButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
