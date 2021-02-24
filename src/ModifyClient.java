@@ -11,6 +11,7 @@ public class ModifyClient {
     private JTextField addressField2;
     private JTextField mailField;
     private JTextField gsmField;
+    private JButton deleteClient;
     private JFrame frame;
     private Person[] people;
     private int idx = -1;
@@ -25,6 +26,7 @@ public class ModifyClient {
             public void actionPerformed(ActionEvent e) {
                 idx = clientBox.getSelectedIndex();
                 modifierLeClientButton.setEnabled(true);
+                deleteClient.setEnabled(true);
                 String[] address = people[idx].getAddress().split("\n");
                 if (address.length == 0);
                 else if (address.length == 1) addressField1.setText(address[0]);
@@ -41,6 +43,17 @@ public class ModifyClient {
             @Override
             public void actionPerformed(ActionEvent e) {
                 people[idx].modify(addressField1.getText().trim() + "\n" + addressField2.getText().trim(), mailField.getText().trim(), gsmField.getText().trim());
+                frame.dispose();
+            }
+        });
+        deleteClient.setEnabled(false);
+        deleteClient.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nom = people[idx].getPrenom() + " " + people[idx].getNom();
+                if (Utils.confirmationDialog("Voulez-vous supprimer " + nom + " du programme ?"));
+                if (MokTwona.db.remove(people[idx])) Utils.informationDialog(nom + " a été retiré du prgramme");
+                else Utils.informationDialog(nom + " n'a pas été retiré du programme !");
                 frame.dispose();
             }
         });

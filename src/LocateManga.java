@@ -87,7 +87,7 @@ public class LocateManga {
                 frame.setContentPane(new AddCredit(frame).rootPanel);
                 //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 try {
-                    frame.setIconImage(ImageIO.read(new File("coin.png")));
+                    frame.setIconImage(ImageIO.read(new File("src/img/coin.png")));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

@@ -34,6 +34,7 @@ public class Person implements Comparable {
 
     public Person(String nom, String prenom, String email, String gsm, String address, LocalDateTime lastActivity, int caution, int credit) {
         this.ID = db.nextPersonId();
+        System.out.println("Nouvelle ID : " + ID);
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;

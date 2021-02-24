@@ -52,7 +52,9 @@ public class AddSerie {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!Utils.confirmationDialog("Ajouter la série " + name + " à la mangathèque ?"))
+                name = nameField.getText().trim();
+                setResumeArea();
+                if (!Utils.confirmationDialog("Ajouter la série " + name + " à la mangathèque ?")) return;
                 new Serie(name, 0, lastPublished, endedBox.isSelected());
                 frame.dispose();
             }

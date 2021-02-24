@@ -19,8 +19,13 @@ public class MokTwona {
     private JButton transactionButton;
     private JButton prolongationButton;
     private JButton addSerieButton;
-    private JButton button1;
+    private JButton loanedByButton;
     private JButton modifyClientButton;
+    private JButton button1;
+    private JButton missingMangaButton;
+    private JButton updateSeriesButton;
+    private JButton statsButton;
+    private JButton lateButton;
     private JFrame frame;
     public static final Database db = Database.initDB();
 
@@ -39,6 +44,11 @@ public class MokTwona {
         setButton(transactionButton, "src/img/transaction.png", size);
         setButton(prolongationButton, "src/img/prolongation.png", (int)(size*1.15), size);
         setButton(modifyClientButton, "src/img/person.png", size);
+        setButton(missingMangaButton, "src/img/missing.png", size);
+        setButton(loanedByButton, "src/img/loaned.png", size);
+        setButton(updateSeriesButton, "src/img/update.png", size);
+        setButton(statsButton, "src/img/stats.png", size);
+        setButton(lateButton, "src/img/late.png", size);
 
         addClientButton.addActionListener(new ActionListener() {
             @Override
@@ -219,6 +229,40 @@ public class MokTwona {
                 //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 try {
                     frame.setIconImage(ImageIO.read(new File("src/img/person.png")));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                frame.pack();
+                //frame.setExtendedState(JFrame.MAXIMIZED_VERT);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+        missingMangaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Trouver les mangas manquants");
+                frame.setContentPane(new FindMissingManga(frame).rootPanel);
+                //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                try {
+                    frame.setIconImage(ImageIO.read(new File("src/img/missing.png")));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                frame.pack();
+                //frame.setExtendedState(JFrame.MAXIMIZED_VERT);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+        loanedByButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Trouver les mangas en prêts");
+                frame.setContentPane(new GetLoanedManga(frame).rootPanel);
+                //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                try {
+                    frame.setIconImage(ImageIO.read(new File("src/img/loaned.png")));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

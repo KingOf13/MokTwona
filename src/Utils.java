@@ -4,10 +4,36 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 
 public class Utils {
+
+
+    public static double toPercent(int a, int b) {
+        double percentage = (int)((((double) a)/b)*10000);
+        percentage /= 100.0;
+        return percentage;
+    }
+
+    public static double toPercent(int a, int b, int nbDec) {
+        double factor = Math.pow(10,nbDec);
+        double percentage = (int)((((double) a)/b)*100*factor);
+        percentage /= factor;
+        return percentage;
+    }
+
+    public static void informationDialog(String message) {
+        JFrame frame = new JFrame();
+        try {
+            frame.setIconImage(ImageIO.read(new File("src/img/exclamation.png")));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        JOptionPane d = new JOptionPane();
+        d.showMessageDialog(frame, message);
+        frame.dispose();
+    }
 
     public static boolean confirmationDialog(String question) {
         JFrame frame = new JFrame();
@@ -24,11 +50,10 @@ public class Utils {
     }
 
     public static int ecartDate(LocalDate fin) {
-        Period period;
         fin = LocalDate.from(fin.atStartOfDay());
         LocalDate tday = LocalDate.from(LocalDate.now().atStartOfDay());
-        period = Period.between(tday, fin);
-        int cmp = period.getDays();
+        long noOfDays = ChronoUnit.DAYS.between(tday, fin);
+        int cmp = (int) noOfDays;
         return cmp;
     }
 

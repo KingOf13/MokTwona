@@ -317,6 +317,28 @@ public class DBHandler {
         return rs;
     }
 
+    public static ResultSet getPersonLoaning(Connection connection) {
+        String sql = "SELECT DISTINCT proprio_id AS id FROM manga WHERE proprio_id != 0;";
+        ResultSet rs = null;
+        try {
+            rs = connection.createStatement().executeQuery(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    public static ResultSet getMangaFromPerson(Connection connection, int person_id) {
+        String sql = "SELECT id FROM manga WHERE proprio_id = " + person_id + ";";
+        ResultSet rs = null;
+        try {
+            rs = connection.createStatement().executeQuery(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
     public static ResultSet getAllManga(Connection conn) {
         String sql = "SELECT id, numero, serie_id, loue, etat, added_time, nb_location, proprio_id FROM manga ORDER BY id ASC";
         ResultSet rs = null;
@@ -327,6 +349,19 @@ public class DBHandler {
         }
         return rs;
     }
+
+    public static ResultSet getMangaFromSerie(Connection conn, int serie_id) {
+        String sql = "SELECT numero FROM manga WHERE serie_id = " + serie_id + " ORDER BY numero ASC;";
+        ResultSet rs = null;
+        try {
+            rs = conn.createStatement().executeQuery(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+
 
     public static ResultSet getAllPerson(Connection conn) {
         String sql = "SELECT id, nom, prenom, mail, gsm, address, last_activity, caution, credit FROM person ORDER BY id ASC";
@@ -504,7 +539,7 @@ public class DBHandler {
     }
 
     public static boolean removePerson(Connection connection, Person person) {
-        String sqlT = "SELECT * FROM transaction WHERE person = " + person.getID();
+        String sqlT = "SELECT * FROM transaction_table WHERE person = " + person.getID();
         String sqlP = "SELECT * FROM pret WHERE person_id = " + person.getID();
         String sqlM = "SELECT * FROM manga WHERE proprio_id = " + person.getID();
         String sqlDelete = "DELETE FROM person WHERE id = " + person.getID();

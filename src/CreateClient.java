@@ -37,8 +37,8 @@ public class CreateClient {
         message += "Adresse : " + address + "\n";
         message += "E-mail : " + mail + "\n";
         message += "GSM : " + gsm + "\n";
-        if (!Utils.confirmationDialog(message))
-        MokTwona.db.add(new Person(name, prenom, mail, gsm, address, LocalDateTime.now(), 0, 1));
-        frame.dispose();
+        if (!Utils.confirmationDialog(message)) return;
+        if(MokTwona.db.add(new Person(name, prenom, mail, gsm, address, LocalDateTime.now(), 0, 1)))
+            frame.dispose();
     }
 }

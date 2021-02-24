@@ -225,6 +225,48 @@ public class Database {
         return true;
     }
 
+    public boolean[] findBlanks(Serie serie) {
+        int lastPublished = serie.getLastPublished();
+        boolean[] tomes = new boolean[lastPublished];
+        for (boolean t: tomes) t = false;
+        ResultSet rs = DBHandler.getMangaFromSerie(connection, serie.getID());
+        try {
+            while (rs.next()) {
+                int numero = rs.getInt("numero");
+                tomes[numero-1] = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tomes;
+    }
+
+    public ArrayList<Person> getLoaners() {
+        ResultSet rs = DBHandler.getPersonLoaning(connection);
+        ArrayList<Person> list = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                list.add(people[rs.getInt("id")]);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public ArrayList<Manga> getLoanedByPerson(Person person) {
+        ArrayList<Manga> list = new ArrayList<>();
+        ResultSet rs = DBHandler.getMangaFromPerson(connection, person.getID());
+        try {
+            while (rs.next()) {
+                list.add(mangas[rs.getInt("id")]);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public Manga[] getMangas() {
         return Utils.removeNull(mangas);
     }
@@ -350,6 +392,7 @@ public class Database {
     }
 
     public boolean add(Person person) {
+        System.out.println("BEGIN INSERTION");
         if (person.getID() < people.length) {
             if (people[person.getID()] != null) {
                 people[person.getID()] = person;

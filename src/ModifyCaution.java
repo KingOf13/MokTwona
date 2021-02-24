@@ -7,26 +7,21 @@ public class ModifyCaution {
     public JPanel rootPanel;
     private JComboBox clientBox;
     private JTextPane cautionPanel;
-    private JComboBox selectBox;
+    private JButton zeroButton;
     private JButton fiveButton;
     private JButton tenButton;
     private JButton confirmerButton;
     private JFrame frame;
-    private final String[] addOrRemove = {"Ajouter", "Retirer"};
-    private int montant = 0;
+    private int montant = -1;
     private boolean notSet = true;
     private int idxClient = -1;
-    private int idxSelect = -1;
     private Person[] people;
 
     public ModifyCaution(JFrame frame) {
         this.frame = frame;
         people = MokTwona.db.getPeople();
-        ComboBoxModel model1 = new DefaultComboBoxModel(addOrRemove);
         ComboBoxModel model2 = new DefaultComboBoxModel(people);
-        selectBox.setModel(model1);
         clientBox.setModel(model2);
-        selectBox.setSelectedIndex(-1);
         clientBox.setSelectedIndex(-1);
         refreshPanel();
         clientBox.addActionListener(new ActionListener() {
@@ -36,10 +31,10 @@ public class ModifyCaution {
                 refreshPanel();
             }
         });
-        selectBox.addActionListener(new ActionListener() {
+        zeroButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                idxSelect = selectBox.getSelectedIndex();
+                montant = 0;
                 refreshPanel();
             }
         });
@@ -60,13 +55,28 @@ public class ModifyCaution {
         confirmerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (idxClient == -1 || idxSelect == -1 || montant == 0) {
+                if (idxClient == -1 || montant == -1) {
                     refreshPanel();
                 }
                 else {
-                    if (idxSelect == 0) { // Ajouter
+                    int toPay = montant-people[idxClient].getCaution();
+                    if (toPay == 0) {
+                        if (Utils.confirmationDialog("Ne pas modifier la caution de " + people[idxClient] + " ?")) frame.dispose();
+                    }
+                    else if (toPay > 0) {
+                        if (!Utils.confirmationDialog("Mettre la caution de " + people[idxClient] + " à " + montant +  "€ ?")) return;
+                        MokTwona.db.add(new Transaction(LocalDateTime.now(), toPay, "Ajout de caution", people[idxClient]));
+                        people[idxClient].setCaution(montant);
+                    }
+                    else {
+                        if (!Utils.confirmationDialog("Mettre la caution de " + people[idxClient] + " à " + montant +  "€ ?")) return;
+                        MokTwona.db.add(new Transaction(LocalDateTime.now(), toPay, "Retrait de caution", people[idxClient]));
+                        people[idxClient].setCaution(montant);
+
+                    }
+                    /*if (idxSelect == 0) { // Ajouter
                         if ((montant + people[idxClient].getCaution()) <= 10) {
-                            MokTwona.db.add(new Transaction(LocalDateTime.now(), montant, "Ajout de caution", people[idxClient]));
+
                             people[idxClient].setCaution(montant + people[idxClient].getCaution());
                             frame.dispose();
                         }
@@ -79,23 +89,22 @@ public class ModifyCaution {
                             frame.dispose();
                         }
                         else cautionPanel.setText("Action non permise - changez les données");
-                    }
+                    }*/
                 }
             }
         });
     }
 
     public void refreshPanel() {
-        if (idxClient == -1 || idxSelect == -1 || montant == 0) {
+        if (idxClient == -1 || montant == -1) {
             String toPrint = "";
             if (idxClient == -1) toPrint += "Sélectionner un client dans la base de donnée\n";
             else toPrint += people[idxClient] + " a une caution de " + people[idxClient].getCaution() + "€\n";
-            if (idxSelect == -1) toPrint += "Sélectionner une action\n";
             if (montant == 0) toPrint += "Sélectionner un montant";
             cautionPanel.setText(toPrint);
         }
         else {
-            cautionPanel.setText(addOrRemove[idxSelect] + " " + montant + "€ à " + people[idxClient] + " ?");
+            cautionPanel.setText("Mettre la caution de " + people[idxClient] + " (actuellement " + people[idxClient].getCaution() + "€) à " + montant + "€ ?");
         }
     }
 

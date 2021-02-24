@@ -10,7 +10,8 @@ import java.util.prefs.Preferences;
 
 public class Test {
    public static void main(String [] args){
-       testTabbedPaneExample();
+       //Utils.informationDialog("Ceci est une information");
+       testDatePrint();
    }
 
 
@@ -65,7 +66,7 @@ public class Test {
     }
 
     public static void testDatePrint() {
-        LocalDate date =  LocalDate.from(LocalDate.now().atStartOfDay());
-        System.out.println(date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)));
+        LocalDate date =  LocalDate.of(2020, 2, 2);
+        System.out.println(Utils.ecartDate(date));
     }
 }
