@@ -67,11 +67,13 @@ public class ModifyCaution {
                         if (!Utils.confirmationDialog("Mettre la caution de " + people[idxClient] + " à " + montant +  "€ ?")) return;
                         MokTwona.db.add(new Transaction(LocalDateTime.now(), toPay, "Ajout de caution", people[idxClient]));
                         people[idxClient].setCaution(montant);
+                        frame.dispose();
                     }
                     else {
                         if (!Utils.confirmationDialog("Mettre la caution de " + people[idxClient] + " à " + montant +  "€ ?")) return;
                         MokTwona.db.add(new Transaction(LocalDateTime.now(), toPay, "Retrait de caution", people[idxClient]));
                         people[idxClient].setCaution(montant);
+                        frame.dispose();
 
                     }
                     /*if (idxSelect == 0) { // Ajouter

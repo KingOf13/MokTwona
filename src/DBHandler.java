@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 
 public class DBHandler {
-    private static String url = "jdbc:sqlite:./mokona.db";
+    private static String url = "jdbc:sqlite:./moktwona.db";
 
     public static void connectSeriesTable(Connection conn) {
 
@@ -62,7 +62,9 @@ public class DBHandler {
                 + "    nb_location integer NOT NULL DEFAULT 0,\n"
                 + "    loue integer NOT NULL,\n"
                 + "    added_time integer NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'localtime')),\n"
-                + "    etat text DEFAULT \"Bon\"\n"
+                + "    etat text DEFAULT \"Bon\",\n"
+                + "    FOREIGN KEY (serie_id) REFERENCES series (id),\n"
+                + "    FOREIGN KEY (proprio_id) REFERENCES person (id)\n"
                 + ");";
 
         try {
@@ -81,7 +83,9 @@ public class DBHandler {
                 + "    serie_id integer NOT NULL,\n"
                 + "    person_id integer NOT NULL,\n"
                 + "    numero integer NOT NULL,\n"
-                + "    time integer NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'localtime'))\n"
+                + "    time integer NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'localtime')),\n"
+                + "    FOREIGN KEY (serie_id) REFERENCES series (id),\n"
+                + "    FOREIGN KEY (person_id) REFERENCES person (id)\n"
                 + ");";
 
         try {
@@ -100,7 +104,9 @@ public class DBHandler {
                 + "    manga_id integer NOT NULL,\n"
                 + "    person_id integer NOT NULL,\n"
                 + "    end_time integer NOT NULL DEFAULT (DATE(CURRENT_TIMESTAMP, 'localtime', '+14 day')),\n"
-                + "    rappel_sent integer NOT NULL DEFAULT 0\n"
+                + "    rappel_sent integer NOT NULL DEFAULT 0,\n"
+                + "    FOREIGN KEY (manga_id) REFERENCES manga (id),\n"
+                + "    FOREIGN KEY (person_id) REFERENCES person (id)\n"
                 + ");";
 
         try {
@@ -117,7 +123,8 @@ public class DBHandler {
         // SQL statement for creating a new table
         String sql = "CREATE TABLE IF NOT EXISTS tag (\n"
                 + "    tag_name text NOT NULL,\n"
-                + "    serie_id integer NOT NULL\n"
+                + "    serie_id integer NOT NULL,\n"
+                + "    FOREIGN KEY (serie_id) REFERENCES series (id)\n"
                 + ");";
 
         try {
@@ -136,7 +143,8 @@ public class DBHandler {
                 + "    montant real NOT NULL,\n"
                 + "    person integer NOT NULL,\n"
                 + "    type text NOT NULL,\n"
-                + "    date integer NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'localtime'))\n"
+                + "    date integer NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'localtime')),\n"
+                + "    FOREIGN KEY (person) REFERENCES person (id)\n"
                 + ");";
 
         try {

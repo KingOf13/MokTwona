@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -84,6 +86,34 @@ public class LocateManga {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Ajouter des crédits");
+                frame.addWindowListener(new WindowListener() {
+                    @Override
+                    public void windowOpened(WindowEvent e) {}
+
+                    @Override
+                    public void windowClosing(WindowEvent e) {}
+
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        int idx = clientBox.getSelectedIndex();
+                        credit = people[idx].getCredit();
+                        caution = people[idx].getCaution();
+                        locatePanel.setText(people[idx] + " a " + credit + " crédit(s) et " + caution + "€ de caution sur son compte.");
+                        refreshPanier();
+                    }
+
+                    @Override
+                    public void windowIconified(WindowEvent e) {}
+
+                    @Override
+                    public void windowDeiconified(WindowEvent e) {}
+
+                    @Override
+                    public void windowActivated(WindowEvent e) {}
+
+                    @Override
+                    public void windowDeactivated(WindowEvent e) {}
+                });
                 frame.setContentPane(new AddCredit(frame).rootPanel);
                 //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 try {

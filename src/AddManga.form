@@ -55,7 +55,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value=""/>
+          <text value="Bon"/>
           <toolTipText value="État du livre"/>
         </properties>
       </component>

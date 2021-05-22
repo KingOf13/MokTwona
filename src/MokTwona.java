@@ -21,15 +21,16 @@ public class MokTwona {
     private JButton addSerieButton;
     private JButton loanedByButton;
     private JButton modifyClientButton;
-    private JButton button1;
+    private JButton updateCurrentSeriesButton;
     private JButton missingMangaButton;
     private JButton updateSeriesButton;
     private JButton statsButton;
     private JButton lateButton;
+    private JButton possessedButton;
     private JFrame frame;
     public static final Database db = Database.initDB();
 
-    private final int size = 125;
+    private final int size = 75;
 
     public MokTwona(JFrame frame) {
         this.frame = frame;
@@ -46,9 +47,11 @@ public class MokTwona {
         setButton(modifyClientButton, "src/img/person.png", size);
         setButton(missingMangaButton, "src/img/missing.png", size);
         setButton(loanedByButton, "src/img/loaned.png", size);
+        setButton(possessedButton, "src/img/books.png", size);
         setButton(updateSeriesButton, "src/img/update.png", size);
         setButton(statsButton, "src/img/stats.png", size);
         setButton(lateButton, "src/img/late.png", size);
+        setButton(updateCurrentSeriesButton, "src/img/update.png", size);
 
         addClientButton.addActionListener(new ActionListener() {
             @Override
@@ -263,6 +266,23 @@ public class MokTwona {
                 //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 try {
                     frame.setIconImage(ImageIO.read(new File("src/img/loaned.png")));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                frame.pack();
+                //frame.setExtendedState(JFrame.MAXIMIZED_VERT);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+        possessedButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Mangas possédés par le kot");
+                frame.setContentPane(new PossessedManga(frame).rootPanel);
+                //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                try {
+                    frame.setIconImage(ImageIO.read(new File("src/img/books.png")));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

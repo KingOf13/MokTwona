@@ -48,7 +48,7 @@ public class GetLoanedManga {
                 Iterator<Manga> mangaIte = mangas.iterator();
                 while (mangaIte.hasNext()) {
                     Manga manga = mangaIte.next();
-                    if (manga.equals(currSerie)) {
+                    if (manga.getSerie().equals(currSerie)) {
                         writer.write(", " + manga.getNumero());
                     }
                     else {
@@ -57,6 +57,7 @@ public class GetLoanedManga {
                     }
                     loaned ++;
                 }
+                writer.write("\n\n");
 
                 count ++;
 

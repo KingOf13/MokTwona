@@ -22,7 +22,7 @@ public class Database {
             super("Database initialisation failed when " + action +".");
         }
     }
-    private static final String url = "jdbc:sqlite:./mokona.db";
+    private static final String url = "jdbc:sqlite:./moktwona.db";
     private Serie[] series;
     private Person[] people;
     private Manga[] mangas;
@@ -145,6 +145,11 @@ public class Database {
 
     private boolean initMangas() {
         DBHandler.connectMangaTable(connection);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         ResultSet rs = DBHandler.getAllManga(connection);
         int maxID = 1;
         ArrayList<Manga> mangasTemp = new ArrayList<Manga>();
@@ -233,11 +238,26 @@ public class Database {
         try {
             while (rs.next()) {
                 int numero = rs.getInt("numero");
-                tomes[numero-1] = true;
+                if (numero != 0) tomes[numero-1] = true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return tomes;
+    }
+
+    public ArrayList<Integer> getTomesFromSerie(Serie serie) {
+        ArrayList<Integer> tomes = new ArrayList<Integer>();
+        ResultSet rs = DBHandler.getMangaFromSerie(connection, serie.getID());
+        try {
+            while (rs.next()) {
+                int numero = rs.getInt("numero");
+                tomes.add(numero);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        tomes.sort(Integer::compareTo);
         return tomes;
     }
 
